@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     if (!isTravelRelated(lastUserMessage)) {
       return NextResponse.json({
         role: 'assistant',
-        content: `I am Zainab, the AI Travel Consultant for **Nodebook Travels**.\n\nI can only assist with travel itineraries, holiday packages, destinations, pricing in PKR, and bookings.\n\nPlease let me know which travel destination or package you would like assistance with!`,
+        content: `I am Zainab from **Nodebook Travels**.\n\nI can only assist with travel itineraries, holiday packages, destinations, pricing in PKR, and bookings.\n\nPlease let me know which travel destination or package you would like assistance with!`,
         matchedTrips: [],
       });
     }
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         content: fallback.reply,
         matchedTrips: fallback.matchedTrips.length > 0 ? fallback.matchedTrips : matchedTrips,
         isFallback: true,
-        notice: 'Running in Knowledge-Base Offline Mode. Set GROQ_API_KEY in .env.local to activate Groq AI.',
+        notice: 'Running in Knowledge-Base Offline Mode. Set GROQ_API_KEY in .env.local to activate Groq.',
       });
     }
 
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
             messages: [
               {
                 role: 'system',
-                content: `${systemPrompt}\n\nCRITICAL CONSTRAINTS (STRICT ENFORCEMENT):\n- You are Zainab, travel consultant at Nodebook Travels.\n- ONLY answer travel, tourism, destination, itinerary, hotel, package, pricing, and booking questions.\n- STRICTLY REFUSE any off-topic question (coding, math, essays, recipes, politics, general knowledge) in 1 sentence.\n- Be direct, concise, factual, and quote starting prices in PKR (e.g. PKR 32,500 / person).\n- Mention official WhatsApp +92 325 2551585 for bookings.`,
+                content: `${systemPrompt}\n\nCRITICAL CONSTRAINTS (STRICT HUMAN PERSONA):\n- You are Zainab, senior travel consultant at Nodebook Travels.\n- Speak naturally as a real human. NEVER say you are an AI, bot, virtual assistant, or language model.\n- ONLY answer travel, tourism, destination, itinerary, hotel, package, pricing, and booking questions.\n- STRICTLY REFUSE any off-topic question (coding, math, essays, recipes, politics, general knowledge) in 1 sentence.\n- Be direct, concise, factual, and quote starting prices in PKR (e.g. PKR 32,500 / person).\n- Mention official WhatsApp +92 325 2551585 for bookings.`,
               },
               ...messages.slice(-8), // keep recent conversation history
             ],
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       const fallback = generateLocalFallbackResponse(lastUserMessage);
       return NextResponse.json({
         role: 'assistant',
-        content: fallback.reply,
+        content: `${fallback.reply}\n\n*(Notice: Server returned status ${lastErrorStatus}. Displayed response from Nodebook Knowledge Base.)*`,
         matchedTrips: fallback.matchedTrips.length > 0 ? fallback.matchedTrips : matchedTrips,
         isFallback: true,
       });
@@ -177,7 +177,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Unhandled Chat API Error:', error);
     return NextResponse.json(
-      { error: 'An unexpected error occurred while communicating with the travel bot.' },
+      { error: 'An unexpected error occurred while communicating with the travel consultant.' },
       { status: 500 }
     );
   }

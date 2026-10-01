@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import {
-  Bot,
-  Sparkles,
+  MessageSquare,
   X,
   Send,
   RefreshCw,
@@ -30,7 +29,7 @@ type ChatMessage = {
 const INITIAL_GREETING: ChatMessage = {
   id: 'welcome',
   role: 'assistant',
-  content: `👋 **As-salamu alaykum!** Welcome to **Nodebook Travels**.\n\nI'm **Zainab**, your AI Travel Consultant. I have complete details on all our **21 curated domestic & international packages**, day-by-day itineraries, seasonal weather advisory, and real-time quotes in **PKR**.\n\nHow can I help you plan your dream vacation today?`,
+  content: `👋 **As-salamu alaykum!** Welcome to **Nodebook Travels**.\n\nI'm **Zainab**, your travel consultant. I have complete details on all our **21 curated domestic & international packages**, day-by-day itineraries, seasonal weather advisory, and real-time quotes in **PKR**.\n\nHow can I help you plan your dream vacation today?`,
   timestamp: 'Just now',
 };
 
@@ -109,7 +108,7 @@ export default function TravelBot() {
     setInput('');
     setIsLoading(true);
 
-    const assistantMsgId = nextId('bot');
+    const assistantMsgId = nextId('consultant');
     const initialAssistantMsg: ChatMessage = {
       id: assistantMsgId,
       role: 'assistant',
@@ -188,11 +187,11 @@ export default function TravelBot() {
           prev.map((msg) =>
             msg.id === assistantMsgId
               ? {
-                ...msg,
-                content: data.content || data.reply || 'Thank you for reaching out! How else can I assist you?',
-                matchedTrips: data.matchedTrips,
-                isFallback: data.isFallback,
-              }
+                  ...msg,
+                  content: data.content || data.reply || 'Thank you for reaching out! How else can I assist you?',
+                  matchedTrips: data.matchedTrips,
+                  isFallback: data.isFallback,
+                }
               : msg
           )
         );
@@ -206,9 +205,9 @@ export default function TravelBot() {
         prev.map((msg) =>
           msg.id === assistantMsgId
             ? {
-              ...msg,
-              content: `⚠️ I encountered a temporary connection issue. However, our dedicated human travel consultants are always online to assist you directly!\n\nFeel free to call or WhatsApp us directly at **${siteConfig.phone}**.`,
-            }
+                ...msg,
+                content: `⚠️ I encountered a temporary connection issue. However, our travel consultants are always online to assist you directly!\n\nFeel free to call or WhatsApp us directly at **${siteConfig.phone}**.`,
+              }
             : msg
         )
       );
@@ -221,13 +220,12 @@ export default function TravelBot() {
 
   const createWhatsAppUrl = (customText?: string) => {
     const text = encodeURIComponent(
-      customText || `Hello Nodebook Travels, I was chatting with your AI assistant and would like to customize an itinerary and get a quote.`
+      customText || `Hello Nodebook Travels, I was speaking with Zainab and would like to customize an itinerary and get a quote.`
     );
     return `https://wa.me/${cleanPhone}?text=${text}`;
   };
 
   const renderFormattedText = (raw: string) => {
-    // Basic Markdown formatting helper for bold, bullet points, headers, and code
     const lines = raw.split('\n');
     return (
       <div className="space-y-1.5 text-[13.5px] leading-relaxed break-words">
@@ -237,7 +235,6 @@ export default function TravelBot() {
             return <div key={idx} className="h-1.5" />;
           }
 
-          // Header ###
           if (trimmed.startsWith('### ')) {
             return (
               <h4 key={idx} className="font-bold text-[#0c2a72] text-[14.5px] mt-2 mb-1">
@@ -246,7 +243,6 @@ export default function TravelBot() {
             );
           }
 
-          // Header ##
           if (trimmed.startsWith('## ')) {
             return (
               <h3 key={idx} className="font-extrabold text-[#0c2a72] text-[15.5px] mt-2 mb-1">
@@ -255,11 +251,9 @@ export default function TravelBot() {
             );
           }
 
-          // Bullets
           const isBullet = trimmed.startsWith('• ') || trimmed.startsWith('- ') || trimmed.startsWith('* ');
           const content = isBullet ? trimmed.replace(/^([•\-*]\s*)/, '') : trimmed;
 
-          // Parse **bold** and *italic*
           const formattedParts = parseInlineStyles(content);
 
           if (isBullet) {
@@ -278,7 +272,6 @@ export default function TravelBot() {
   };
 
   const parseInlineStyles = (text: string) => {
-    // Match **bold**
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
@@ -294,7 +287,7 @@ export default function TravelBot() {
 
   return (
     <>
-      {/* Floating Launcher Button - Positioned above the existing contact button */}
+      {/* Floating Launcher Button - Positioned cleanly above the existing contact button */}
       <div className="fixed bottom-[74px] sm:bottom-[86px] right-4 sm:right-5.5 z-50 flex items-center gap-3">
         {/* Teaser pill on desktop before opening */}
         {!isOpen && hasNewPrompt && (
@@ -307,7 +300,7 @@ export default function TravelBot() {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#08bdc7]"></span>
             </span>
             <p className="text-xs font-bold leading-none">
-              Plan your journey with AI <span className="text-[#08bdc7] font-extrabold">Zainab</span>
+              Chat with <span className="text-[#08bdc7] font-extrabold">Zainab</span>
             </p>
           </div>
         )}
@@ -317,18 +310,18 @@ export default function TravelBot() {
             setIsOpen((prev) => !prev);
             setHasNewPrompt(false);
           }}
-          aria-label={isOpen ? 'Close Travel Assistant' : 'Open Travel Assistant'}
-          className={`relative group flex items-center justify-center rounded-full transition-all duration-300 shadow-[0_10px_35px_rgba(12,42,114,0.35)] ${isOpen
+          aria-label={isOpen ? 'Close chat with Zainab' : 'Chat with Zainab'}
+          className={`relative group flex items-center justify-center rounded-full transition-all duration-300 shadow-[0_10px_35px_rgba(12,42,114,0.35)] ${
+            isOpen
               ? 'w-12 h-12 sm:w-13 sm:h-13 bg-[#0c2a72] text-white hover:bg-[#082260]'
               : 'w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-tr from-[#0c2a72] via-[#0f358a] to-[#08bdc7] text-white hover:scale-105 hover:shadow-[0_12px_40px_rgba(8,189,199,0.4)]'
-            }`}
+          }`}
         >
           {isOpen ? (
             <X className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:rotate-90" />
           ) : (
             <div className="relative flex items-center justify-center">
-              <Bot className="w-6 h-6 sm:w-7 sm:h-7" />
-              <Sparkles className="w-3.5 h-3.5 text-[#38f3fc] absolute -top-1 -right-1 animate-pulse" />
+              <MessageSquare className="w-6 h-6 sm:w-6.5 sm:h-6.5 fill-white/20" />
               <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-400 border-2 border-white rounded-full"></span>
             </div>
           )}
@@ -338,28 +331,29 @@ export default function TravelBot() {
       {/* Main Chat Drawer / Window */}
       {isOpen && (
         <div
-          className={`fixed z-50 bottom-[136px] sm:bottom-[152px] right-3 sm:right-5.5 bg-white border border-[#dce6ed] rounded-2xl shadow-[0_20px_60px_rgba(11,39,108,0.22)] overflow-hidden flex flex-col transition-all duration-300 ${isExpanded
+          className={`fixed z-50 bottom-[136px] sm:bottom-[152px] right-3 sm:right-5.5 bg-white border border-[#dce6ed] rounded-2xl shadow-[0_20px_60px_rgba(11,39,108,0.22)] overflow-hidden flex flex-col transition-all duration-300 ${
+            isExpanded
               ? 'w-[calc(100vw-24px)] sm:w-[620px] h-[75vh] max-h-[760px]'
               : 'w-[calc(100vw-24px)] sm:w-[410px] h-[560px] max-h-[calc(100vh-170px)]'
-            }`}
+          }`}
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-[#0c2a72] to-[#0f3898] text-white px-4 py-3.5 flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white font-bold">
-                  <Bot className="w-5 h-5 text-[#0bdfe8]" />
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#08bdc7] to-[#0bdfe8] text-[#0c2a72] font-black flex items-center justify-center text-sm shadow-inner tracking-tight">
+                  Z
                 </div>
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#0c2a72] rounded-full"></span>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
                   <h3 className="text-sm font-bold leading-tight">Zainab</h3>
-                  <span className="bg-[#08bdc7]/25 text-[#38f3fc] text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded tracking-wider">
-                    AI Agent
+                  <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                    Online
                   </span>
                 </div>
-                <p className="text-[11.5px] text-white/80 leading-tight">Nodebook Travels Concierge</p>
+                <p className="text-[11.5px] text-white/80 leading-tight">Senior Travel Consultant · Nodebook Travels</p>
               </div>
             </div>
 
@@ -393,7 +387,7 @@ export default function TravelBot() {
             <div className="bg-amber-50 border-b border-amber-200 px-3 py-1.5 flex items-center justify-between text-[11px] text-amber-800">
               <span className="flex items-center gap-1.5">
                 <AlertCircle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-                Knowledge Base Offline Mode (Add GROQ_API_KEY in .env.local)
+                Offline Mode (Add GROQ_API_KEY in .env.local)
               </span>
               <button
                 onClick={() => setShowNotice(false)}
@@ -412,10 +406,11 @@ export default function TravelBot() {
                 className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm ${msg.role === 'user'
+                  className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm ${
+                    msg.role === 'user'
                       ? 'bg-[#0c2a72] text-white rounded-br-xs'
                       : 'bg-white text-[#1e293b] border border-[#e2e8f0] rounded-bl-xs'
-                    }`}
+                  }`}
                 >
                   {msg.role === 'assistant' ? (
                     <div>
@@ -483,8 +478,7 @@ export default function TravelBot() {
             {/* Loading Indicator */}
             {isLoading && (
               <div className="flex items-center gap-2 text-[#0c2a72] bg-white border border-[#e2e8f0] rounded-2xl rounded-bl-xs px-3.5 py-2.5 w-fit shadow-sm">
-                <Bot className="w-4 h-4 text-[#08bdc7] animate-spin" />
-                <span className="text-xs text-[#64748b] font-medium">Zainab is thinking...</span>
+                <span className="text-xs text-[#64748b] font-medium">Zainab is typing...</span>
                 <span className="flex gap-1 ml-1">
                   <span className="w-1.5 h-1.5 bg-[#08bdc7] rounded-full animate-bounce"></span>
                   <span className="w-1.5 h-1.5 bg-[#08bdc7] rounded-full animate-bounce [animation-delay:0.2s]"></span>
@@ -523,7 +517,7 @@ export default function TravelBot() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about Hunza, Skardu, Baku, prices..."
+              placeholder="Ask Zainab about packages, itineraries, prices..."
               disabled={isLoading}
               className="flex-1 bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#08bdc7] rounded-xl px-3.5 py-2.5 text-xs text-[#1e293b] outline-none transition-all placeholder:text-[#94a3b8] disabled:opacity-50"
             />
@@ -537,11 +531,11 @@ export default function TravelBot() {
             </button>
           </form>
 
-          {/* Bottom Branding / Direct WhatsApp Link */}
+          {/* Bottom Direct WhatsApp Link */}
           <div className="bg-[#f8fafc] px-3 py-1.5 border-t border-[#f1f5f9] flex items-center justify-between text-[10.5px] text-[#64748b]">
-            <span className="flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[#08bdc7]" />
-              Nodebook AI
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+              Zainab · Nodebook Travels
             </span>
             <a
               href={createWhatsAppUrl()}
