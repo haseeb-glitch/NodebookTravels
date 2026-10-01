@@ -35,6 +35,25 @@ export async function OPTIONS() {
   });
 }
 
+export async function GET() {
+  return NextResponse.json({
+    status: 'ok',
+    service: 'Nodebook Travels Chat API',
+    model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+  });
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
