@@ -1,4 +1,3 @@
-/** Verified business contact details and live production URL. */
 export const siteConfig = {
   siteUrl: 'https://nodebooktravels-production.up.railway.app',
   contactEmail: 'contact@nodebook.com',
