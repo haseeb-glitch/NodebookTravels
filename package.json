@@ -31,6 +31,5 @@
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3"
   },
-  "type": "module",
-  "packageManager": "pnpm@11.25.0"
+  "type": "module"
 }
