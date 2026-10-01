@@ -16,13 +16,38 @@ const FALLBACK_MODELS = [
   'allam-2-7b',
 ];
 
+export async function GET() {
+  return NextResponse.json({
+    status: 'ok',
+    service: 'Nodebook Travels Chat API',
+    model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+  });
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { messages = [] } = body;
 
     if (!Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json({ error: 'Messages array is required.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Messages array is required.' },
+        {
+          status: 400,
+          headers: { 'Access-Control-Allow-Origin': '*' },
+        }
+      );
     }
 
     const lastUserMessage = [...messages].reverse().find((m: { role: string }) => m.role === 'user')?.content || '';
@@ -172,6 +197,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
         Connection: 'keep-alive',
+        'Access-Control-Allow-Origin': '*',
       },
     });
   } catch (error) {

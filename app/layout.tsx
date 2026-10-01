@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { siteConfig } from '@/lib/site-config';
 import TravelBot from '@/components/travel-bot';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.siteUrl),
   title: 'Nodebook Travels | Pakistan & International Holidays',
   description: 'Explore Pakistan destinations and international holiday packages with Nodebook Travels.',
   icons: { icon: '/favicon.svg' },
