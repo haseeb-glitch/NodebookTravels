@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import TravelBot from '@/components/travel-bot';
 
 export const metadata: Metadata = {
   title: 'Nodebook Travels | Pakistan & International Holidays',
@@ -18,8 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <TravelBot />
+      </body>
     </html>
   );
 }
+
 
